@@ -21,6 +21,7 @@ import { Component, Input } from '@angular/core';
     ]
 })
 export class XenobladeCardComponent {
-    @Input() headerText: string | undefined;
-    @Input() isRoute: boolean = false;
+    @Input() public headerText: string | undefined;
+    @Input() public isRoute: boolean = false;
+    constructor() {}
 }

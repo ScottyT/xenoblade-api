@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CharacterComponent } from './character/character.component';
 
 const routes: Routes = [
     {
         path: '',
         children: [
             {
-                path: 'character-list',
-                component: CharacterComponent,
+                path: 'characters',
+                loadChildren: () => import('./character/character.module').then((m) => m.CharacterModule),
                 title: 'Characters'
             }
         ]

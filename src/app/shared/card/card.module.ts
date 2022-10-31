@@ -4,8 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { XenobladeCardComponent } from './card.component';
 
 @NgModule({
-    declarations: [XenobladeCardComponent],
     imports: [CommonModule, MatCardModule],
+    declarations: [XenobladeCardComponent],
     exports: [XenobladeCardComponent]
 })
 export class XenobladeCardModule {}

@@ -1,8 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { XenobladeCardModule, XenobladeMenuModule } from '.';
-const SHARED_COMPONENTS = [XenobladeCardModule, XenobladeMenuModule];
-@NgModule({
-    imports: [...SHARED_COMPONENTS],
-    exports: [...SHARED_COMPONENTS]
-})
-export class XenobladeSharedComponents {}
+import { FormsModule } from '@angular/forms';
+import { XenobladeCardComponent } from './card/card.component';
+import { XenobladeCardModule } from './card/card.module';
+
+@NgModule({})
+export class XenobladeSharedModule {}
