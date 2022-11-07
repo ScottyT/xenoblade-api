@@ -1,4 +1,12 @@
-<div class="character-list">
-    <p>Hello</p>
-    <xb-card *ngFor="let character of characters" [headerText]="character.name"></xb-card>
+<div class="character-list" *ngIf="(characterListService.loadingData$ | async) === false; else loader">
+    <ng-template ngFor [ngForOf]="charactersObs$ | async" let-character>
+        <a [routerLink]="'detail/' + character.id">
+            <xb-card [headerText]="character.name">
+                <p>Level: {{ character.level }}</p>
+            </xb-card>
+        </a>
+    </ng-template>
 </div>
+<ng-template #loader>
+    <xb-loader loadingText="Fetching characters..." loadingMode="skeleton"></xb-loader>
+</ng-template>

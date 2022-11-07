@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ICharacterModel } from 'src/app/shared/interfaces';
 import { CharacterListService } from '../../services/character-list.service';
@@ -10,22 +10,19 @@ import { CharacterListService } from '../../services/character-list.service';
     styleUrls: ['./character-list.component.scss']
 })
 export class CharacterListComponent implements OnInit {
-    characters: ICharacterModel[] = [];
-    constructor(
-        private readonly characterListService: CharacterListService,
-        private readonly activatedRoute: ActivatedRoute
-    ) {}
+    charactersObs$ = new BehaviorSubject<ICharacterModel[]>([]);
+    constructor(public characterListService: CharacterListService) {}
 
     ngOnInit(): void {
-        console.log('from character lsit component');
-        this.characterListService
-            .getAll()
-            .pipe(
-                tap((data) => {
-                    this.characters = data;
-                    console.log(data);
-                })
-            )
-            .subscribe();
+        this.characterListService.getAll().pipe(
+            tap((data) => {
+                this.charactersObs$.next(data);
+            })
+        );
+        //.subscribe(() => this.characterListService.loadingData$.next(false));
+    }
+
+    viewCharacter(id: string) {
+        window.open(`characters/detatil/${id}`);
     }
 }
