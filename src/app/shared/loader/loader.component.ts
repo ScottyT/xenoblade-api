@@ -21,14 +21,25 @@ import { LoadingModeEnum } from '../enums';
 
         <ng-template #skeletonLoader>
             <div class="skeleton-loader">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <ngx-skeleton-loader
+                    animation="pulse"
+                    [theme]="{ 'background-color': skeletonColor, 'height': '100px' }"
+                ></ngx-skeleton-loader>
             </div>
         </ng-template>
-    `
+    `,
+    styles: [
+        `
+            .skeleton-loader {
+                height: 150px;
+            }
+        `
+    ]
 })
 export class XenobladeLoaderComponent {
     @Input() loadingText: string = 'Loading...';
     @Input() loadingMode: string = LoadingModeEnum.ProgressBar;
+    @Input() skeletonColor?: string;
 
     constructor() {
         // Empty

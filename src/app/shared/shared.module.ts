@@ -6,7 +6,7 @@ import { XenobladeCardModule } from './card/card.module';
 import { XenobladeLoaderModule } from './loader';
 
 @NgModule({
-    //imports: [CommonModule, FormsModule, XenobladeCardModule, XenobladeLoaderModule],
-    exports: [XenobladeCardModule, XenobladeLoaderModule, CommonModule]
+    imports: [CommonModule, FormsModule, XenobladeCardModule, XenobladeLoaderModule],
+    exports: [XenobladeCardModule, FormsModule, XenobladeLoaderModule, CommonModule]
 })
 export class XenobladeSharedModule {}

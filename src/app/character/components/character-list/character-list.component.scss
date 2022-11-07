@@ -1,0 +1,14 @@
+.character-list {
+    padding: 1rem;
+    display: flex;
+    column-gap: 12px;
+
+    &__character {
+        width: 300px;
+    }
+}
+:host {
+    app-character {
+        padding: 1rem;
+    }
+}

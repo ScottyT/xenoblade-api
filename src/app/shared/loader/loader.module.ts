@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { XenobladeLoaderComponent } from './loader.component';
 
 @NgModule({
-    imports: [CommonModule, OverlayModule, MatCardModule, MatProgressBarModule],
+    imports: [CommonModule, OverlayModule, MatCardModule, MatProgressBarModule, NgxSkeletonLoaderModule],
     declarations: [XenobladeLoaderComponent],
     exports: [XenobladeLoaderComponent]
 })
