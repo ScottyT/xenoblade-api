@@ -1,1 +1,17 @@
-<p>detail works!</p>
+<div class="character-detail">
+    <h2>{{ character.name }}</h2>
+    <h2>Level: {{ character.level }}</h2>
+    <h2>Class: {{ character.assignedHeroClass.name }}</h2>
+    <div class="pt-4">
+        <h1 class="text-center">Stats</h1>
+        <xb-card [headerText]="character.name">
+            <div class="stats"></div>
+            <ng-template ngFor [ngForOf]="statsArr" let-item>
+                <div class="character-stats">
+                    <div class="character-stats__name">{{ item.statName }}</div>
+                    <div>{{ item.statValue }}</div>
+                </div>
+            </ng-template>
+        </xb-card>
+    </div>
+</div>

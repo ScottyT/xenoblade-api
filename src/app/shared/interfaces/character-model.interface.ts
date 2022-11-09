@@ -5,5 +5,5 @@ export interface ICharacterModel {
     level: number;
     name: string;
     heroClassId?: string;
-    assignedHeroClass?: IHeroClassModel;
+    assignedHeroClass: IHeroClassModel;
 }

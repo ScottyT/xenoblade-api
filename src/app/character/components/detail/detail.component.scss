@@ -1,0 +1,17 @@
+.character-detail {
+    max-width: 800px;
+    width: 100%;
+    margin: auto;
+}
+.character-stats {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    &:not(last-child) {
+        padding-bottom: 1rem;
+    }
+
+    &__name {
+        font-size: 1.1rem;
+    }
+}
