@@ -6,4 +6,9 @@ export interface ICharacterModel {
     name: string;
     heroClassId?: string;
     assignedHeroClass: IHeroClassModel;
+    health: number;
+    attack: number;
+    healingPower: number;
+    dexterity: number;
+    agility: number;
 }

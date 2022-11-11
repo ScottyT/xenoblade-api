@@ -1,17 +1,54 @@
-<div class="character-detail">
-    <h2>{{ character.name }}</h2>
-    <h2>Level: {{ character.level }}</h2>
+<div class="character-detail" *ngIf="(characterService.loadingData$ | async) === false">
+    <div class="character-detail__header-name">{{ character.name }}</div>
+    <div class="character-detail__level">
+        <h2>Level: {{ character.level }}</h2>
+        <div class="character-detail__level-changer">
+            <button
+                type="button"
+                mat-mini-fab
+                class="character-detail__level-changer--subtract"
+                (click)="leveling('subtract', character)"
+                *ngIf="character.level > 1"
+            >
+                <mat-icon aria-hidden="false" fontIcon="remove"></mat-icon>
+            </button>
+            <button
+                type="button"
+                mat-mini-fab
+                class="character-detail__level-changer--add"
+                (click)="leveling('addition', character)"
+            >
+                <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
+            </button>
+        </div>
+    </div>
     <h2>Class: {{ character.assignedHeroClass.name }}</h2>
-    <div class="pt-4">
+    <h2>Role: {{ character.assignedHeroClass.role }}</h2>
+    <div class="pt-4 stats-section">
         <h1 class="text-center">Stats</h1>
-        <xb-card [headerText]="character.name">
-            <div class="stats"></div>
+        <xb-card>
             <ng-template ngFor [ngForOf]="statsArr" let-item>
                 <div class="character-stats">
-                    <div class="character-stats__name">{{ item.statName }}</div>
-                    <div>{{ item.statValue }}</div>
+                    <div class="character-stats__name">{{ item.statName | capitalizeFirstLetter }}</div>
+                    <div>{{ item.statValue | number: '1.0-0' }}</div>
                 </div>
             </ng-template>
+            <div class="character-stats">
+                <div class="character-stats__name">Block Rate</div>
+                <div>{{ character.assignedHeroClass.blockRate * 100 }}%</div>
+            </div>
+            <div class="character-stats">
+                <div class="character-stats__name">Critical Rate</div>
+                <div>{{ character.assignedHeroClass.criticalRate * 100 }}%</div>
+            </div>
+            <div class="character-stats">
+                <div class="character-stats__name">Physical Defense</div>
+                <div>{{ character.assignedHeroClass.physDefense * 100 | number: '1.0-0' }}%</div>
+            </div>
+            <div class="character-stats">
+                <div class="character-stats__name">Ether Defense</div>
+                <div>{{ character.assignedHeroClass.etherDefense * 100 | number: '1.0-0' }}%</div>
+            </div>
         </xb-card>
     </div>
 </div>

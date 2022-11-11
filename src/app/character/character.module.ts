@@ -5,10 +5,12 @@ import { CharacterListComponent } from './components/character-list/character-li
 
 import { CharacterListService } from './services/character-list.service';
 import { DetailComponent } from './components/detail/detail.component';
+import { CapitalizeFirstLetterPipe } from '../shared/pipes';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     providers: [CharacterListService],
-    declarations: [CharacterListComponent, DetailComponent],
-    imports: [CharacterRouting, XenobladeSharedModule]
+    declarations: [CharacterListComponent, DetailComponent, CapitalizeFirstLetterPipe],
+    imports: [CharacterRouting, XenobladeSharedModule, MatButtonModule]
 })
 export class CharacterModule {}
