@@ -18,4 +18,8 @@ export class CharacterListService {
     public get(id: string): Observable<ICharacterModel> {
         return this.http.get<ICharacterModel>(`${apiUrl}/Characters/${id}`);
     }
+
+    public saveCharacter(character: ICharacterModel): Observable<string> {
+        return this.http.post<string>(`${apiUrl}/Characters`, character);
+    }
 }

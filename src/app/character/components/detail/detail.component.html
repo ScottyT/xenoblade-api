@@ -1,4 +1,4 @@
-<div class="character-detail" *ngIf="(characterService.loadingData$ | async) === false">
+<div class="character-detail" *ngIf="(loadingCharacter$ | async) === false">
     <div class="character-detail__header-name">{{ character.name }}</div>
     <div class="character-detail__level">
         <h2>Level: {{ character.level }}</h2>
@@ -7,7 +7,7 @@
                 type="button"
                 mat-mini-fab
                 class="character-detail__level-changer--subtract"
-                (click)="leveling('subtract', character)"
+                (click)="leveling('subtract')"
                 *ngIf="character.level > 1"
             >
                 <mat-icon aria-hidden="false" fontIcon="remove"></mat-icon>
@@ -16,14 +16,24 @@
                 type="button"
                 mat-mini-fab
                 class="character-detail__level-changer--add"
-                (click)="leveling('addition', character)"
+                (click)="leveling('addition')"
             >
                 <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
             </button>
         </div>
     </div>
     <h2>Class: {{ character.assignedHeroClass.name }}</h2>
-    <h2>Role: {{ character.assignedHeroClass.role }}</h2>
+    <h2>Role: {{ role }}</h2>
+    <div>
+        <xb-dropdown
+            label="Select Hero Class..."
+            [data]="heroClasses"
+            (valueChanges)="onHeroClassChange($event)"
+        ></xb-dropdown>
+    </div>
+    <div>
+        <button mat-button color="primary" type="button" (click)="savingCharacter()">Save changes</button>
+    </div>
     <div class="pt-4 stats-section">
         <h1 class="text-center">Stats</h1>
         <xb-card>

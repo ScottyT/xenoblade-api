@@ -34,12 +34,12 @@ export class CharacterBuilder implements IBuilder<IModifiedCharacter> {
         if (this._level % 2 !== 0) this._health = valueOdd;
         return this;
     }
-    incrementLevel(value: number): this {
-        this._level += value;
+    incrementLevel(value: number, curLevel: number): this {
+        this._level = curLevel + value;
         return this;
     }
-    decrementLevel(value: number): this {
-        this._level -= value;
+    decrementLevel(value: number, curLevel: number): this {
+        this._level = curLevel - value;
         return this;
     }
     setAttack(valueEven: number, valueOdd: number): this {
@@ -52,19 +52,22 @@ export class CharacterBuilder implements IBuilder<IModifiedCharacter> {
 
         return this;
     }
-    setHealingPower(value: number, comp: string): this {
-        if (comp === 'addition') this._builder.healingPower += value / 100;
+    setHealingPower(value: number, initValue: number, comp: string): this {
+        const prevHealingPower = initValue;
+        if (comp === 'addition') {
+            this._builder.healingPower = value / 100 + prevHealingPower;
+        }
         if (comp === 'subtract') this._builder.healingPower -= value / 100;
         return this;
     }
     setDexterity(value: number, comp: string): this {
-        if (comp === 'addition') this._builder.dexterity += value / 100;
-        if (comp == 'subtract') this._builder.dexterity -= value / 100;
+        if (comp === 'addition') this._builder.dexterity += Math.round(value / 100);
+        if (comp == 'subtract') this._builder.dexterity -= Math.round(value / 100);
         return this;
     }
     setAgility(value: number, comp: string): this {
-        if (comp === 'addition') this._builder.agility += value / 100;
-        if (comp == 'subtract') this._builder.agility -= value / 100;
+        if (comp === 'addition') this._builder.agility += Math.round(value / 100);
+        if (comp == 'subtract') this._builder.agility -= Math.round(value / 100);
         return this;
     }
     set(character: ICharacterModel): this {

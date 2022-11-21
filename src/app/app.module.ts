@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
         AppRoutingModule,
         BrowserAnimationsModule,
         CommonModule,
+        BrowserModule,
         XenobladeSharedModule
     ],
     bootstrap: [AppComponent]
