@@ -43,6 +43,8 @@ export class CharacterBuilder implements IBuilder<IModifiedCharacter> {
         return this;
     }
     setAttack(valueEven: number, valueOdd: number): this {
+        // this._attack = 0;
+        // this._builder.attack = 0;
         if (this._level % 2 === 0) {
             this._attack = valueEven;
         }

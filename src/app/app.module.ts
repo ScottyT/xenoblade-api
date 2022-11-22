@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { XenobladeSharedModule } from './shared';
 import { HttpClientModule } from '@angular/common/http';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @NgModule({
     declarations: [AppComponent],
@@ -16,8 +17,10 @@ import { HttpClientModule } from '@angular/common/http';
         BrowserAnimationsModule,
         CommonModule,
         BrowserModule,
-        XenobladeSharedModule
+        XenobladeSharedModule,
+        MatDialogModule
     ],
+    providers: [{ provide: MAT_DIALOG_DATA, useValue: { hasBackdrop: false } }],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

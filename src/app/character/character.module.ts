@@ -6,10 +6,12 @@ import { CharacterListComponent } from './components/character-list/character-li
 import { CharacterListService } from './services/character-list.service';
 import { DetailComponent } from './components/detail/detail.component';
 import { CapitalizeFirstLetterPipe } from '../shared/pipes';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     providers: [CharacterListService],
-    declarations: [CharacterListComponent, DetailComponent, CapitalizeFirstLetterPipe],
-    imports: [CharacterRouting, XenobladeSharedModule, XbDropdownModule]
+    declarations: [CharacterListComponent, ConfirmDialogComponent, DetailComponent, CapitalizeFirstLetterPipe],
+    imports: [CharacterRouting, XenobladeSharedModule, XbDropdownModule, MatDialogModule]
 })
 export class CharacterModule {}

@@ -7,7 +7,7 @@
                 type="button"
                 mat-mini-fab
                 class="character-detail__level-changer--subtract"
-                (click)="leveling('subtract')"
+                (click)="leveling('subtract', 1)"
                 *ngIf="character.level > 1"
             >
                 <mat-icon aria-hidden="false" fontIcon="remove"></mat-icon>
@@ -16,7 +16,7 @@
                 type="button"
                 mat-mini-fab
                 class="character-detail__level-changer--add"
-                (click)="leveling('addition')"
+                (click)="leveling('addition', 1)"
             >
                 <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
             </button>
@@ -25,11 +25,14 @@
     <h2>Class: {{ character.assignedHeroClass.name }}</h2>
     <h2>Role: {{ role }}</h2>
     <div>
-        <xb-dropdown
-            label="Select Hero Class..."
-            [data]="heroClasses"
-            (valueChanges)="onHeroClassChange($event)"
-        ></xb-dropdown>
+        <mat-form-field appearance="fill">
+            <mat-label>Select Hero Class</mat-label>
+            <mat-select [(ngModel)]="selectedClass" (selectionChange)="onChange($event)">
+                <mat-option *ngFor="let option of heroClasses" [value]="option">
+                    {{ option.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
     <div>
         <button mat-button color="primary" type="button" (click)="savingCharacter()">Save changes</button>

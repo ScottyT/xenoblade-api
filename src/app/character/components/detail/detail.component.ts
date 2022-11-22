@@ -1,11 +1,14 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subject, switchMap, tap, zip } from 'rxjs';
+import { BehaviorSubject, map, Subject, switchMap, tap, zip } from 'rxjs';
 import { ICharacterModel, IHeroClassModel } from 'src/app/shared/interfaces';
 import { XbHeroClassService } from 'src/app/shared/services';
 import { CharacterBuilder } from '../../data/character.builder';
 import { CharacterListService } from '../../services/character-list.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 interface IStat {
     statName: string;
     statValue: number;
@@ -22,13 +25,17 @@ export class DetailComponent implements OnInit {
     statsArr: IStat[] = [];
     modifiedCharacter = new CharacterBuilder();
     role: string;
-    heroClassesObs$ = new BehaviorSubject<IHeroClassModel[]>([]);
     heroClasses: IHeroClassModel[] = [];
-    selectedClass: IHeroClassModel;
+    selectedClass: any = null;
+    selectedClassValue: any = null;
+    previousSelectedClass: any = null;
+    modCharacter: {};
+
     constructor(
         private readonly characterService: CharacterListService,
         private readonly activatedRoute: ActivatedRoute,
-        private readonly heroClassService: XbHeroClassService
+        private readonly heroClassService: XbHeroClassService,
+        public dialog: MatDialog
     ) {}
 
     ngOnInit(): void {
@@ -41,7 +48,6 @@ export class DetailComponent implements OnInit {
             .subscribe(([character, heroClasses]) => {
                 this.loadingCharacter$.next(false);
                 this.characterView.next(character);
-                this.heroClassesObs$.next(heroClasses);
                 this.heroClasses = heroClasses;
             });
 
@@ -50,23 +56,26 @@ export class DetailComponent implements OnInit {
                 tap((data) => {
                     this.character = data;
                     this.role = data.assignedHeroClass.role;
-                    this.statsArr = objectToArray(data, ['level', 'heroClassId', 'assignedHeroClass', 'id', 'name']);
-                })
+                }),
+                map((character) => this.characterService.modStats(character))
             )
-            .subscribe();
+            .subscribe((data) => {
+                //let newCharacter = this.characterService.modStats(data);
+                this.statsArr = objectToArray(data, ['level', 'heroClassId', 'assignedHeroClass', 'id', 'name']);
+            });
     }
 
-    leveling(growth: string) {
+    leveling(growth: string, rate: number) {
         if (growth == 'addition') {
             this.modifiedCharacter
-                .incrementLevel(1, this.character.level)
+                .incrementLevel(rate, this.character.level)
                 .setCharacterHealth(this.character.health + 79, this.character.health + 81)
                 .setAttack(this.character.attack + 10, this.character.attack + 8)
                 .set(this.character);
         }
         if (growth == 'subtract') {
             this.modifiedCharacter
-                .decrementLevel(1, this.character.level)
+                .decrementLevel(rate, this.character.level)
                 .setCharacterHealth(this.character.health - 81, this.character.health - 79)
                 .setAttack(this.character.attack - 8, this.character.attack - 10)
                 .set(this.character);
@@ -86,19 +95,48 @@ export class DetailComponent implements OnInit {
         this.characterService.saveCharacter(this.character).subscribe();
     }
 
+    onChange(event: any) {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                content: 'You have unsaved changes. Do you want to proceed changing the hero class?'
+            }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result === true) {
+                this.previousSelectedClass = event.value;
+                this.selectedClass = event.value;
+                this.onHeroClassChange(event);
+            } else {
+                this.selectedClass = this.previousSelectedClass;
+            }
+        });
+    }
+
     onHeroClassChange(event: any) {
         this.role = event.value.role;
+        this.selectedClass = event.value;
         this.heroClassService
             .read(event.value.id, this.character.id)
             .pipe(
                 tap((data) => {
                     this.character.assignedHeroClass = data;
-                    console.log(
-                        objectToArray(data.character, ['level', 'heroClassId', 'assignedHeroClass', 'id', 'name'])
-                    );
-                })
+                }),
+                switchMap((value) =>
+                    this.characterService.getUpdatedCharacter(this.character.id, value.id).pipe(
+                        tap((val) => {
+                            this.statsArr = objectToArray(val, [
+                                'level',
+                                'heroClassId',
+                                'assignedHeroClass',
+                                'id',
+                                'name'
+                            ]);
+                        })
+                    )
+                ),
+                map((data) => this.characterService.modStats(data))
             )
-            .subscribe(() => {});
+            .subscribe();
     }
 }
 function objectToArray(character: ICharacterModel, exclude: string[]): IStat[] {
