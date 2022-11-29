@@ -1,5 +1,21 @@
 <div class="character-detail" *ngIf="(loadingCharacter$ | async) === false">
     <div class="character-detail__header-name">{{ character.name }}</div>
+    <xb-card headerText="Character Info" class="character-detail__info">
+        <h3>Class: {{ character.assignedHeroClass.name }}</h3>
+        <h3>Role: {{ role }}</h3>
+        <mat-form-field appearance="fill">
+            <mat-label>Select Hero Class</mat-label>
+            <mat-select [(ngModel)]="selectedClass" (selectionChange)="onChange($event)">
+                <mat-option *ngFor="let option of heroClasses" [value]="option">
+                    {{ option.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+            <button mat-button color="primary" type="button" (click)="savingCharacter()">Save changes</button>
+        </div>
+    </xb-card>
+
     <div class="character-detail__level">
         <h2>Level: {{ character.level }}</h2>
         <div class="character-detail__level-changer">
@@ -22,21 +38,7 @@
             </button>
         </div>
     </div>
-    <h2>Class: {{ character.assignedHeroClass.name }}</h2>
-    <h2>Role: {{ role }}</h2>
-    <div>
-        <mat-form-field appearance="fill">
-            <mat-label>Select Hero Class</mat-label>
-            <mat-select [(ngModel)]="selectedClass" (selectionChange)="onChange($event)">
-                <mat-option *ngFor="let option of heroClasses" [value]="option">
-                    {{ option.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div>
-        <button mat-button color="primary" type="button" (click)="savingCharacter()">Save changes</button>
-    </div>
+
     <div class="pt-4 stats-section">
         <h1 class="text-center">Stats</h1>
         <xb-card>

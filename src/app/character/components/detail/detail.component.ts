@@ -29,7 +29,7 @@ export class DetailComponent implements OnInit {
     selectedClass: any = null;
     selectedClassValue: any = null;
     previousSelectedClass: any = null;
-    modCharacter: {};
+    ogLevel: number;
 
     constructor(
         private readonly characterService: CharacterListService,
@@ -46,6 +46,7 @@ export class DetailComponent implements OnInit {
                 })
             )
             .subscribe(([character, heroClasses]) => {
+                this.ogLevel = character.level;
                 this.loadingCharacter$.next(false);
                 this.characterView.next(character);
                 this.heroClasses = heroClasses;
@@ -60,7 +61,6 @@ export class DetailComponent implements OnInit {
                 map((character) => this.characterService.modStats(character))
             )
             .subscribe((data) => {
-                //let newCharacter = this.characterService.modStats(data);
                 this.statsArr = objectToArray(data, ['level', 'heroClassId', 'assignedHeroClass', 'id', 'name']);
             });
     }
@@ -96,23 +96,27 @@ export class DetailComponent implements OnInit {
     }
 
     onChange(event: any) {
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            data: {
-                content: 'You have unsaved changes. Do you want to proceed changing the hero class?'
-            }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result === true) {
-                this.previousSelectedClass = event.value;
-                this.selectedClass = event.value;
-                this.onHeroClassChange(event);
-            } else {
-                this.selectedClass = this.previousSelectedClass;
-            }
-        });
+        if (this.character.level > this.ogLevel) {
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                data: {
+                    content: 'You have unsaved changes. Do you want to proceed changing the hero class?'
+                }
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result === true) {
+                    this.previousSelectedClass = event.value;
+                    this.selectedClass = event.value;
+                    this.heroClassChange(event);
+                } else {
+                    this.selectedClass = this.previousSelectedClass;
+                }
+            });
+        } else {
+            this.heroClassChange(event);
+        }
     }
 
-    onHeroClassChange(event: any) {
+    heroClassChange(event: any) {
         this.role = event.value.role;
         this.selectedClass = event.value;
         this.heroClassService
@@ -144,7 +148,7 @@ function objectToArray(character: ICharacterModel, exclude: string[]): IStat[] {
 
     for (const [k, v] of Object.entries(character)) {
         if (!exclude.includes(k)) {
-            result.push({ statName: k, statValue: v as number });
+            result.push({ statName: k.replace(/[A-Z]/g, ' $&').trim(), statValue: v as number });
         }
     }
     return result;
