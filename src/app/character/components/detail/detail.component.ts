@@ -29,7 +29,7 @@ export class DetailComponent implements OnInit {
     selectedClass: any = null;
     selectedClassValue: any = null;
     previousSelectedClass: any = null;
-    ogLevel: number;
+    ogCharacter: ICharacterModel;
 
     constructor(
         private readonly characterService: CharacterListService,
@@ -46,7 +46,7 @@ export class DetailComponent implements OnInit {
                 })
             )
             .subscribe(([character, heroClasses]) => {
-                this.ogLevel = character.level;
+                this.ogCharacter = character;
                 this.loadingCharacter$.next(false);
                 this.characterView.next(character);
                 this.heroClasses = heroClasses;
@@ -70,23 +70,27 @@ export class DetailComponent implements OnInit {
             this.modifiedCharacter
                 .incrementLevel(rate, this.character.level)
                 .setCharacterHealth(this.character.health + 79, this.character.health + 81)
-                .setAttack(this.character.attack + 10, this.character.attack + 8)
                 .set(this.character);
         }
         if (growth == 'subtract') {
             this.modifiedCharacter
                 .decrementLevel(rate, this.character.level)
                 .setCharacterHealth(this.character.health - 81, this.character.health - 79)
-                .setAttack(this.character.attack - 8, this.character.attack - 10)
                 .set(this.character);
         }
         if (this.role == 'Defender' || this.role == 'Attacker') {
             this.modifiedCharacter.setHealingPower(40, this.character.healingPower, growth).setDexterity(175, growth);
         }
+
         if (this.role == 'Defender') {
-            this.modifiedCharacter.setAgility(220, growth);
+            this.modifiedCharacter.setAgility(220, growth).setAttack(150, growth);
+        } else if (this.role == 'Attacker') {
+            this.modifiedCharacter.setAttack(350, growth);
         } else {
-            this.modifiedCharacter.setHealingPower(100, this.character.healingPower, growth).setDexterity(125, growth);
+            this.modifiedCharacter
+                .setHealingPower(100, this.character.healingPower, growth)
+                .setDexterity(125, growth)
+                .setAttack(150, growth);
         }
         this.characterView.next(this.modifiedCharacter.build());
     }
@@ -96,7 +100,7 @@ export class DetailComponent implements OnInit {
     }
 
     onChange(event: any) {
-        if (this.character.level > this.ogLevel) {
+        if (this.character.level > this.ogCharacter.level) {
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
                 data: {
                     content: 'You have unsaved changes. Do you want to proceed changing the hero class?'
@@ -106,6 +110,7 @@ export class DetailComponent implements OnInit {
                 if (result === true) {
                     this.previousSelectedClass = event.value;
                     this.selectedClass = event.value;
+                    this.character = this.ogCharacter;
                     this.heroClassChange(event);
                 } else {
                     this.selectedClass = this.previousSelectedClass;
@@ -137,8 +142,8 @@ export class DetailComponent implements OnInit {
                             ]);
                         })
                     )
-                ),
-                map((data) => this.characterService.modStats(data))
+                )
+                //map((data) => this.characterService.modStats(data))
             )
             .subscribe();
     }

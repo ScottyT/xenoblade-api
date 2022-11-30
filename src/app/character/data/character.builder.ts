@@ -42,15 +42,9 @@ export class CharacterBuilder implements IBuilder<IModifiedCharacter> {
         this._level = curLevel - value;
         return this;
     }
-    setAttack(valueEven: number, valueOdd: number): this {
-        // this._attack = 0;
-        // this._builder.attack = 0;
-        if (this._level % 2 === 0) {
-            this._attack = valueEven;
-        }
-        if (this._level % 2 !== 0) {
-            this._attack = valueOdd;
-        }
+    setAttack(value: number, comp: string): this {
+        if (comp === 'addition') this._builder.attack += Math.round(value / 100);
+        if (comp === 'subtract') this._builder.attack -= Math.round(value / 100);
 
         return this;
     }
@@ -78,7 +72,7 @@ export class CharacterBuilder implements IBuilder<IModifiedCharacter> {
     }
     build(): ICharacterModel {
         this._builder.level = this._level;
-        this._builder.attack = this._attack;
+        //this._builder.attack = this._attack;
         this._builder.health = this._health;
         return JSON.parse(JSON.stringify(this._builder));
     }

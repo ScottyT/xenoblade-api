@@ -11,9 +11,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <div>
-            <button mat-button color="primary" type="button" (click)="savingCharacter()">Save changes</button>
-        </div>
+        <button mat-button color="primary" type="button" (click)="savingCharacter()">Save changes</button>
     </xb-card>
 
     <div class="character-detail__level">
@@ -39,8 +37,7 @@
         </div>
     </div>
 
-    <div class="pt-4 stats-section">
-        <h1 class="text-center">Stats</h1>
+    <div class="stats-section">
         <xb-card>
             <ng-template ngFor [ngForOf]="statsArr" let-item>
                 <div class="character-stats">
